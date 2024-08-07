@@ -1,0 +1,95 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Laravel Swagger API Documentation",
+        "description": "Swagger documentation for the Laravel API",
+        "contact": {
+            "email": "support@example.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/setup": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Setup two-factor authentication",
+                "description": "Setup two-factor authentication for a user",
+                "operationId": "6a667d0edf583c14cafd94f92dd5085e",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LoginRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "200": {
+                        "description": "Two Factor Resource",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TwoFactorResource"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "LoginRequest": {
+                "required": [
+                    "email",
+                    "password"
+                ],
+                "properties": {
+                    "email": {
+                        "description": "User email address",
+                        "type": "string"
+                    },
+                    "password": {
+                        "description": "User password",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "TwoFactorResource": {
+                "properties": {
+                    "id": {
+                        "description": "User ID",
+                        "type": "integer"
+                    },
+                    "two_factor_secret": {
+                        "description": "Two factor authentication secret",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Authentication",
+            "description": "Authentication"
+        }
+    ]
+}
