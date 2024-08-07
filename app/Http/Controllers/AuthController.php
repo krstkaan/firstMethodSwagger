@@ -6,19 +6,13 @@ use App\Http\Requests\LoginRequest;
 use App\Http\Resources\TwoFactorResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
-
-namespace App\Http\Controllers;
-
-use App\Http\Requests\LoginRequest;
-use App\Http\Resources\TwoFactorResource;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
+use Illuminate\Http\Request; 
 
 /**
  * @OA\Post(
  *     path="/setup",
  *     summary="Setup two-factor authentication",
- *     description="Setup two-factor authentication for a user",
+ *     description="Setup two-factor authentication for a user. This endpoint allows a user to enable two-factor authentication. If the user already has a two-factor authentication secret, the endpoint will return a 204 No Content response. Otherwise, it will generate a new secret and return it in the response.",
  *     tags={"Authentication"},
  *     @OA\RequestBody(
  *         required=true,
@@ -26,7 +20,11 @@ use Illuminate\Http\Response;
  *     ),
  *     @OA\Response(
  *         response=204,
- *         description="No Content"
+ *         description="No Content",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             example={}
+ *         )
  *     ),
  *     @OA\Response(
  *         response=200,
@@ -35,12 +33,29 @@ use Illuminate\Http\Response;
  *     ),
  *     @OA\Response(
  *         response=401,
- *         description="Unauthorized"
+ *         description="Unauthorized",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(
+ *                 property="message",
+ *                 type="string",
+ *                 example="Unauthorized"
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=400,
+ *         description="Bad Request",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(
+ *                 property="message",
+ *                 type="string",
+ *                 example="Bad Request"
+ *             )
+ *         )
  *     )
  * )
- * 
- * 
- * 
  */
 class AuthController extends Controller
 {
@@ -48,15 +63,15 @@ class AuthController extends Controller
     {
         $request->authenticate();
         $user = $request->user();
-
+    
         if ($user->two_factor_secret) {
             return response()->json([], Response::HTTP_NO_CONTENT);
         }
-
+    
         $secret = $this->google2fa->generateSecretKey();
         $user->two_factor_secret = $secret;
         $user->save();
-
+    
         return new TwoFactorResource($user);
     }
 }

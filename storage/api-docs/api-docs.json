@@ -19,7 +19,7 @@
                     "Authentication"
                 ],
                 "summary": "Setup two-factor authentication",
-                "description": "Setup two-factor authentication for a user",
+                "description": "Setup two-factor authentication for a user. This endpoint allows a user to enable two-factor authentication. If the user already has a two-factor authentication secret, the endpoint will return a 204 No Content response. Otherwise, it will generate a new secret and return it in the response.",
                 "operationId": "6a667d0edf583c14cafd94f92dd5085e",
                 "requestBody": {
                     "required": true,
@@ -33,7 +33,15 @@
                 },
                 "responses": {
                     "204": {
-                        "description": "No Content"
+                        "description": "No Content",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": []
+                            }
+                        }
                     },
                     "200": {
                         "description": "Two Factor Resource",
@@ -46,7 +54,36 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthorized"
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Bad Request"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 }
             }
