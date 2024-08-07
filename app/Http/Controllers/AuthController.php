@@ -6,7 +6,7 @@ use App\Http\Requests\LoginRequest;
 use App\Http\Resources\TwoFactorResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
-use Illuminate\Http\Request; 
+use Illuminate\Http\Request;
 
 /**
  * @OA\Post(
@@ -43,6 +43,20 @@ use Illuminate\Http\Request;
  *             )
  *         )
  *     ),
+ *  @OA\Response(
+ *         response=422,
+ *         description="Unprocessable Entity",
+ *         @OA\JsonContent(
+ *            type="object",
+ *           @OA\Property(
+ *                property="message",
+ *               type="string",
+ *              example="The email field must be a valid email address."
+ *         )
+ *    )
+ * 
+ * 
+ *     ),
  *     @OA\Response(
  *         response=400,
  *         description="Bad Request",
@@ -63,15 +77,15 @@ class AuthController extends Controller
     {
         $request->authenticate();
         $user = $request->user();
-    
+
         if ($user->two_factor_secret) {
             return response()->json([], Response::HTTP_NO_CONTENT);
         }
-    
+
         $secret = $this->google2fa->generateSecretKey();
         $user->two_factor_secret = $secret;
         $user->save();
-    
+
         return new TwoFactorResource($user);
     }
 }
