@@ -7,3 +7,4 @@ Route::get('/', function () {
     return view('welcome');
 });
 Route::post('/setup', [AuthController::class, 'setup']);
+Route::get('/user', [AuthController::class, 'userList']);

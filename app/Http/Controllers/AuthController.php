@@ -7,6 +7,7 @@ use App\Http\Resources\TwoFactorResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
+use App\Models\User;
 
 /**
  * @OA\Post(
@@ -88,6 +89,12 @@ class AuthController extends Controller
 
         return new TwoFactorResource($user);
     }
+    public function userList(Request $request): JsonResponse
+    {
+        $users = User::all();
+        return response()->json($users);
+    }
 }
+
 
 
